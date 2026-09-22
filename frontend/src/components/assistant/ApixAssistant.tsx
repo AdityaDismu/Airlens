@@ -347,34 +347,34 @@ export default function ApixAssistant() {
   }
 
   return (
-    <section aria-label="APIx Assistant" className="fixed bottom-5 right-5 z-50 flex w-[min(390px,calc(100vw-24px))] flex-col overflow-hidden rounded-3xl border border-[#CDC5BB] bg-white shadow-[0_20px_60px_rgba(70,61,69,0.16)]">
-      <header className="flex items-center justify-between border-b border-[#E1DBD2] bg-[#675B69] px-4 py-3 text-white">
+    <section aria-label="APIx Assistant" className="fixed bottom-5 right-5 z-50 flex w-[min(390px,calc(100vw-24px))] flex-col overflow-hidden rounded-3xl border border-[#D9E1E7] bg-white shadow-[0_20px_60px_rgba(70,61,69,0.16)]">
+      <header className="flex items-center justify-between border-b border-[#D9E1E7] bg-[#16202B] px-4 py-3 text-white">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10"><Bot size={19} /></div>
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#38A9E8] text-[#16202B]"><Bot size={19} className="text-[#16202B]" /></div>
           <div className="min-w-0">
-            <div className="text-sm font-semibold">APIx Assistant</div>
-            <div className="truncate text-[10px] text-white/65">Helping with {pageName(location.pathname)}</div>
+            <div className="text-sm font-semibold text-white">APIx Assistant</div>
+            <div className="truncate text-[10px] text-[#D9E1E7]">Helping with {pageName(location.pathname)}</div>
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <button type="button" aria-label="Minimize APIx Assistant" onClick={() => setMinimized(true)} className="rounded-lg p-2 text-white/75 hover:bg-white/10 hover:text-white"><Minus size={16} /></button>
-          <button type="button" aria-label="Close APIx Assistant" onClick={() => setOpen(false)} className="rounded-lg p-2 text-white/75 hover:bg-white/10 hover:text-white"><X size={16} /></button>
+          <button type="button" aria-label="Minimize APIx Assistant" onClick={() => setMinimized(true)} className="rounded-lg p-2 text-white hover:bg-[#223447] hover:text-white"><Minus size={16} /></button>
+          <button type="button" aria-label="Close APIx Assistant" onClick={() => setOpen(false)} className="rounded-lg p-2 text-white hover:bg-[#223447] hover:text-white"><X size={16} /></button>
         </div>
       </header>
 
-      <div className="max-h-[430px] min-h-[330px] overflow-y-auto bg-[#F0EDE7] px-3 py-4">
-        <div className="mb-3 flex items-start gap-2 rounded-2xl border border-[#DED5E3] bg-[#FBF9F4] p-3">
-          <Sparkles size={15} className="mt-0.5 shrink-0 text-[#6B5A78]" />
-          <p className="text-[11px] leading-5 text-[#5F5A63]">Current-number answers come from the APIx backend. Navigation commands open the relevant page.</p>
+      <div className="max-h-[430px] min-h-[330px] overflow-y-auto bg-[#FFFFFF] px-3 py-4 text-[#17212B]">
+        <div className="mb-3 flex items-start gap-2 rounded-2xl border border-[#D9E1E7] bg-[#EEF3F7] p-3">
+          <Sparkles size={15} className="mt-0.5 shrink-0 text-[#38A9E8]" />
+          <p className="text-[11px] leading-5 text-[#667685]">Current-number answers come from the APIx backend. Navigation commands open the relevant page.</p>
         </div>
 
         <div className="space-y-3">
           {messages.map(message => (
             <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={message.role === 'user' ? 'max-w-[84%] rounded-2xl rounded-br-md bg-[#6B5A78] px-3 py-2.5 text-xs leading-5 text-white' : 'max-w-[88%] rounded-2xl rounded-bl-md border border-[#DCD7CE] bg-white px-3 py-2.5 text-xs leading-5 text-[#4B4851]'}>
+              <div className={message.role === 'user' ? 'max-w-[84%] rounded-2xl rounded-br-md bg-[#16202B] px-3 py-2.5 text-xs leading-5 text-white' : 'max-w-[88%] rounded-2xl rounded-bl-md border border-[#D9E1E7] bg-[#EEF3F7] px-3 py-2.5 text-xs leading-5 text-[#17212B]'}>
                 {message.text}
                 {message.action && (
-                  <button type="button" onClick={() => navigate(message.action!.path)} className="mt-2 flex w-full items-center justify-between rounded-xl bg-[#F3EFF5] px-3 py-2 text-left text-[11px] font-semibold text-[#6B5A78]">
+                  <button type="button" onClick={() => navigate(message.action!.path)} className="mt-2 flex w-full items-center justify-between rounded-xl bg-[#FFFFFF] px-3 py-2 text-left text-[11px] font-semibold text-[#1976D2] hover:bg-[#EEF3F7]">
                     {message.action.label}<ChevronRight size={14} />
                   </button>
                 )}
@@ -382,26 +382,26 @@ export default function ApixAssistant() {
             </div>
           ))}
 
-          {busy && <div className="flex justify-start"><div className="rounded-2xl rounded-bl-md border border-[#DCD7CE] bg-white px-3 py-2.5 text-xs text-[#74727A]">Checking current APIx data…</div></div>}
+          {busy && <div className="flex justify-start"><div className="rounded-2xl rounded-bl-md border border-[#D9E1E7] bg-[#EEF3F7] px-3 py-2.5 text-xs text-[#667685]">Checking current APIx data…</div></div>}
           <div ref={endRef} />
         </div>
       </div>
 
-      <div className="border-t border-[#E1DBD2] bg-white p-3">
+      <div className="border-t border-[#D9E1E7] bg-white p-3">
         <div className="mb-2 flex gap-1.5 overflow-x-auto pb-1">
           {QUICK.map(prompt => (
-            <button type="button" key={prompt} onClick={() => void ask(prompt)} disabled={busy} className="shrink-0 rounded-full border border-[#CDC5BB] bg-white px-2.5 py-1.5 text-[10px] font-medium text-[#5F5A63] hover:border-[#9A9499] hover:bg-[#F6F2EC] disabled:opacity-50">
+            <button type="button" key={prompt} onClick={() => void ask(prompt)} disabled={busy} className="shrink-0 rounded-full border border-[#D9E1E7] bg-white px-2.5 py-1.5 text-[10px] font-medium text-[#17212B] hover:border-[#38A9E8] hover:bg-[#EEF3F7] disabled:opacity-50">
               {prompt}
             </button>
           ))}
         </div>
 
         <form onSubmit={event => { event.preventDefault(); void ask(input); }} className="flex items-end gap-2">
-          <div className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-[#CDC5BB] bg-white px-3 py-2 focus-within:border-[#6B5A78] focus-within:ring-2 focus-within:ring-[#6B5A78]/10">
-            <CircleHelp size={15} className="shrink-0 text-[#9A9499]" />
-            <input value={input} onChange={event => setInput(event.target.value)} placeholder="Ask about APIx…" aria-label="Ask APIx Assistant" className="min-w-0 flex-1 bg-transparent text-xs text-[#30313A] outline-none placeholder:text-[#9A9499]" />
+          <div className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-[#D9E1E7] bg-white px-3 py-2 focus-within:border-[#38A9E8] focus-within:ring-2 focus-within:ring-[#38A9E8]/10">
+            <CircleHelp size={15} className="shrink-0 text-[#667685]" />
+            <input value={input} onChange={event => setInput(event.target.value)} placeholder="Ask about APIx…" aria-label="Ask APIx Assistant" className="min-w-0 flex-1 bg-transparent text-xs text-[#17212B] outline-none placeholder:text-[#667685]" />
           </div>
-          <button type="submit" disabled={!input.trim() || busy} aria-label="Send question" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#6B5A78] text-white disabled:cursor-not-allowed disabled:opacity-40">
+          <button type="submit" disabled={!input.trim() || busy} aria-label="Send question" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#16202B] text-white hover:bg-[#223447] disabled:cursor-not-allowed disabled:opacity-40">
             <Send size={15} />
           </button>
         </form>
