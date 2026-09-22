@@ -1,0 +1,622 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-bg: #F5F7F8;
+  --color-surface: #FFFFFF;
+  --color-navy: #172033;
+  --color-slate: #667085;
+  --color-brand: #155EEF;
+  --color-teal: #0E9F9A;
+  --color-sky: #38BDF8;
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-error: #DC2626;
+  --color-border: #E4E7EC;
+  --color-border-light: #F2F4F7;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #D0D5DD transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: #D0D5DD;
+  border-radius: 4px;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #F5F7F8;
+  color: #172033;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #E4E7EC 25%, #F2F4F7 50%, #E4E7EC 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes drawLine {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+
+.route-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 1.2s ease-out forwards;
+}
+
+.page-shell{width:100%;max-width:1180px;margin:0 auto;padding:24px 20px 56px}
+.page-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:22px}
+.page-title{font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-.035em;color:#172033}
+.page-subtitle{margin-top:7px;max-width:760px;font-size:13px;line-height:1.65;color:#667085}
+.section-label{font-size:10px;line-height:1.2;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#667085}
+.card-title{font-size:14px;font-weight:650;color:#172033}
+.metric-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#98A2B3}
+.metric-value{font-family:'JetBrains Mono',monospace;font-size:22px;line-height:1.2;font-weight:700;color:#172033}
+.metric-sub{font-size:10px;color:#667085;margin-top:4px}
+.button-secondary{display:inline-flex;align-items:center;gap:7px;border:1px solid #D0D5DD;background:#fff;border-radius:9px;padding:8px 11px;font-size:12px;font-weight:600;color:#475467;transition:.15s}
+.button-secondary:hover:not(:disabled){border-color:#155EEF;color:#155EEF;background:#FAFBFF}
+.button-secondary:disabled{opacity:.55;cursor:not-allowed}
+.button-link{margin-top:14px;font-size:11px;font-weight:700;color:#155EEF}
+.card-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+.alert-error{display:flex;align-items:flex-start;gap:9px;padding:11px 13px;margin-bottom:16px;border:1px solid #FECACA;border-radius:10px;background:#FEF2F2;color:#991B1B;font-size:12px;line-height:1.5}
+.field-label{display:block;margin-bottom:5px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#667085}
+.field-select{appearance:none;min-width:130px;padding:8px 31px 8px 10px;border:1px solid #D0D5DD;border-radius:8px;background:#fff;font-size:12px;font-weight:600;color:#172033;outline:none}
+.field-select:focus{border-color:#155EEF;box-shadow:0 0 0 3px rgba(21,94,239,.08)}
+.field-chevron{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:#667085;pointer-events:none}
+.field-search{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:#98A2B3;pointer-events:none}
+.data-table{width:100%;border-collapse:collapse;font-size:11px;white-space:nowrap}
+.data-table th{text-align:left;padding:10px 14px;background:#FAFBFC;border-bottom:1px solid #E4E7EC;color:#667085;font-weight:700}
+.data-table td{padding:11px 14px;border-bottom:1px solid #F2F4F7;color:#344054}
+.data-table tbody tr:hover{background:#FAFBFF}
+.tag{display:inline-flex;align-items:center;border-radius:7px;background:#F2F4F7;color:#667085;padding:4px 7px;font-size:10px}
+.tag-blue{background:#EEF4FF;color:#155EEF}
+.icon-button{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #E4E7EC;border-radius:8px;color:#667085}
+.pipeline-node{display:inline-flex;align-items:center;gap:6px;border:1px solid #E4E7EC;background:#F9FAFB;border-radius:9px;padding:8px 10px;font-size:11px;font-weight:600;color:#475467}
+.pipeline-node-final{background:#155EEF;border-color:#155EEF;color:#fff}
+.skeleton-card{background:linear-gradient(90deg,#E4E7EC 25%,#F2F4F7 50%,#E4E7EC 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+@media(max-width:640px){.page-shell{padding:18px 14px 42px}.page-header-row{flex-direction:column}.page-title{font-size:23px}}
+
+/* --------------------------------------------------------------------------
+   APIx application-shell redesign
+   The landing page intentionally keeps the original global theme. These
+   variables are inherited only by pages rendered inside .app-shell.
+   -------------------------------------------------------------------------- */
+.app-shell {
+  --color-white: #FFFFFF;
+  --color-black: #17212B;
+  --color-slate-50: #F1F4F6;
+  --color-slate-100: #E8EEF2;
+  --color-slate-200: #D9E1E7;
+  --color-slate-300: #C5D0D8;
+  --color-slate-400: #9AAAB7;
+  --color-slate-500: #7B8B98;
+  --color-slate-600: #667685;
+  --color-slate-700: #4F606E;
+  --color-slate-800: #344654;
+  --color-slate-900: #223447;
+  --color-slate-950: #16202B;
+
+  --color-blue-50: #EAF5FC;
+  --color-blue-100: #D5ECF9;
+  --color-blue-200: #A9D9F2;
+  --color-blue-300: #7BC5EB;
+  --color-blue-400: #38A9E8;
+  --color-blue-500: #1976D2;
+  --color-blue-600: #1769B8;
+  --color-blue-700: #145A9F;
+  --color-blue-800: #124B83;
+  --color-blue-900: #103B67;
+  --color-blue-950: #0D2A4A;
+
+  --color-indigo-50: #EAF5FC;
+  --color-indigo-100: #D5ECF9;
+  --color-indigo-200: #A9D9F2;
+  --color-indigo-300: #7BC5EB;
+  --color-indigo-400: #38A9E8;
+  --color-indigo-500: #1976D2;
+  --color-indigo-600: #1769B8;
+  --color-indigo-700: #145A9F;
+  --color-indigo-800: #124B83;
+  --color-indigo-900: #103B67;
+
+  --color-emerald-50: #EEF5F0;
+  --color-emerald-100: #DCEBE0;
+  --color-emerald-200: #C5DDCC;
+  --color-emerald-300: #A3C5AE;
+  --color-emerald-400: #74A385;
+  --color-emerald-500: #5D8D70;
+  --color-emerald-600: #4E8066;
+  --color-emerald-700: #416B56;
+  --color-emerald-800: #355744;
+
+  --color-green-50: #EEF5F0;
+  --color-green-100: #DCEBE0;
+  --color-green-500: #5D8D70;
+  --color-green-600: #4E8066;
+  --color-green-700: #416B56;
+
+  --color-amber-50: #F7F2E7;
+  --color-amber-100: #EDE1C7;
+  --color-amber-200: #E1CFAB;
+  --color-amber-400: #BD8F4A;
+  --color-amber-500: #A87535;
+  --color-amber-600: #95672D;
+  --color-amber-700: #7E5528;
+
+  --color-rose-50: #F7ECEA;
+  --color-rose-100: #F0DAD7;
+  --color-rose-200: #E7C1BC;
+  --color-rose-300: #D99C94;
+  --color-rose-400: #BD756D;
+  --color-rose-500: #B26760;
+  --color-rose-600: #A85C57;
+  --color-rose-700: #8F4C48;
+
+  --color-red-50: #F7ECEA;
+  --color-red-100: #F0DAD7;
+  --color-red-500: #B26760;
+  --color-red-600: #A85C57;
+  --color-red-700: #8F4C48;
+
+  --color-teal-50: #EEF4EF;
+  --color-teal-100: #DCEBE0;
+  --color-teal-200: #C5DDCC;
+  --color-teal-300: #A3C5AE;
+  --color-teal-400: #7FA18A;
+  --color-teal-500: #718A78;
+  --color-teal-600: #617966;
+  --color-teal-700: #526654;
+  --color-teal-800: #465647;
+  --color-teal-900: #3B493D;
+
+  min-height: 100vh;
+  font-family: 'Manrope', system-ui, sans-serif;
+  background: #F1F4F6;
+  color: #17212B;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.app-shell ::selection {
+  background: #A9D9F2;
+  color: #17212B;
+}
+
+.app-shell .font-mono {
+  font-family: 'DM Mono', monospace;
+}
+
+.app-shell .skeleton {
+  background: linear-gradient(90deg, #E8EEF2 25%, #FFFFFF 50%, #E8EEF2 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+.app-shell .page-shell {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 30px 28px 64px;
+}
+
+.app-shell .page-title {
+  font-size: 29px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  color: #17212B;
+}
+
+.app-shell .page-subtitle {
+  margin-top: 8px;
+  max-width: 800px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #667685;
+}
+
+.app-shell .section-label {
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #667685;
+}
+
+.app-shell .card-title {
+  font-size: 14px;
+  font-weight: 750;
+  color: #17212B;
+}
+
+.app-shell .metric-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #9AAAB7;
+}
+
+.app-shell .metric-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: #17212B;
+}
+
+.app-shell .metric-sub {
+  font-size: 10px;
+  color: #667685;
+  margin-top: 4px;
+}
+
+.app-shell .button-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #D9E1E7;
+  background: #FFFFFF;
+  border-radius: 11px;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #667685;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+.app-shell .button-secondary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: #A9D9F2;
+  color: #1976D2;
+  background: #FFFFFF;
+  box-shadow: 0 8px 20px rgba(23, 118, 210, .06);
+}
+
+.app-shell .button-secondary:disabled {
+  opacity: .55;
+}
+
+.app-shell .button-link {
+  margin-top: 14px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #1976D2;
+}
+
+.app-shell .card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.app-shell .alert-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 15px;
+  margin-bottom: 18px;
+  border: 1px solid #F2B8B5;
+  border-radius: 14px;
+  background: #FEF2F2;
+  color: #DC2626;
+  font-size: 12px;
+  line-height: 1.55;
+  box-shadow: 0 8px 22px rgba(90, 60, 56, .04);
+}
+
+.app-shell .field-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: #667685;
+}
+
+.app-shell .field-select {
+  appearance: none;
+  min-width: 130px;
+  padding: 9px 32px 9px 11px;
+  border: 1px solid #D9E1E7;
+  border-radius: 10px;
+  background: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
+  color: #17212B;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.app-shell .field-select:focus {
+  border-color: #38A9E8;
+  box-shadow: 0 0 0 3px rgba(56, 169, 232, .10);
+}
+
+.app-shell .field-chevron {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 13px;
+  height: 13px;
+  color: #667685;
+  pointer-events: none;
+}
+
+.app-shell .field-search {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 13px;
+  height: 13px;
+  color: #9AAAB7;
+  pointer-events: none;
+}
+
+.app-shell .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.app-shell .data-table th {
+  text-align: left;
+  padding: 11px 14px;
+  background: #F1F4F6;
+  border-bottom: 1px solid #D9E1E7;
+  color: #667685;
+  font-weight: 800;
+}
+
+.app-shell .data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #E8EEF2;
+  color: #344654;
+}
+
+.app-shell .data-table tbody tr {
+  transition: background .12s ease;
+}
+
+.app-shell .data-table tbody tr:hover {
+  background: #F1F4F6;
+}
+
+.app-shell .tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  background: #E8EEF2;
+  color: #667685;
+  padding: 4px 7px;
+  font-size: 10px;
+}
+
+.app-shell .tag-blue {
+  background: #EAF5FC;
+  color: #1976D2;
+}
+
+.app-shell .icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 33px;
+  height: 33px;
+  border: 1px solid #D9E1E7;
+  border-radius: 10px;
+  color: #667685;
+  background: #FFFFFF;
+  transition: all .15s ease;
+}
+
+.app-shell .icon-button:hover {
+  border-color: #A9D9F2;
+  color: #1976D2;
+  transform: translateY(-1px);
+}
+
+.app-shell .pipeline-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #D9E1E7;
+  background: #F1F4F6;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #667685;
+}
+
+.app-shell .pipeline-node-final {
+  background: #1976D2;
+  border-color: #1976D2;
+  color: #FFFFFF;
+}
+
+@media(max-width: 900px) {
+  .app-shell .page-shell { padding: 24px 18px 52px; }
+}
+
+@media(max-width: 640px) {
+  .app-shell .page-shell { padding: 18px 14px 42px; }
+  .app-shell .page-header-row { flex-direction: column; }
+  .app-shell .page-title { font-size: 24px; }
+}
+
+/* =========================================
+   GLOBAL TEXT VISIBILITY OVERRIDE
+   Keeps the existing warm editorial theme
+   but makes text darker and easier to read.
+   ========================================= */
+
+body {
+  color: #29242a;
+}
+
+/* Main headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #211c22;
+}
+
+/* Normal text */
+p,
+span,
+li,
+label,
+small {
+  color: #3d363e;
+}
+
+/* Secondary / muted text */
+.text-muted,
+.text-secondary,
+.muted,
+[class*="text-muted"],
+[class*="text-secondary"] {
+  color: #5a5159;
+}
+
+/* Form labels */
+label {
+  color: #302a31;
+}
+
+/* Table text */
+table,
+thead,
+tbody,
+th,
+td {
+  color: #332d34;
+}
+
+/* Buttons */
+button {
+  color: #29242a;
+}
+
+/* Links */
+a {
+  color: #3f3540;
+}
+
+/* Placeholder text */
+input::placeholder,
+textarea::placeholder {
+  color: #756b73;
+  opacity: 1;
+}
+
+/* =========================================
+   LANDING PAGE
+   Restore its original text colors
+   ========================================= */
+
+.landing-page {
+  color: revert;
+}
+
+/* Headings */
+.landing-page h1,
+.landing-page h2,
+.landing-page h3,
+.landing-page h4,
+.landing-page h5,
+.landing-page h6 {
+  color: revert;
+}
+
+/* General text */
+.landing-page p,
+.landing-page span,
+.landing-page a,
+.landing-page label {
+  color: revert;
+}
+
+/* Tailwind muted text classes used elsewhere */
+.landing-page .text-slate-300 {
+  color: rgb(203 213 225) !important;
+}
+
+.landing-page .text-slate-200 {
+  color: rgb(226 232 240) !important;
+}
+
+.landing-page .text-slate-400 {
+  color: rgb(148 163 184) !important;
+}
+
+.landing-page .text-white {
+  color: #ffffff !important;
+}
+
+/* Explicit custom colors used by the landing page */
+.landing-page .text-\[\#172033\] {
+  color: #172033 !important;
+}
+
+.landing-page .text-\[\#667085\] {
+  color: #667085 !important;
+}
+
+.landing-page .text-\[\#98A2B3\] {
+  color: #98A2B3 !important;
+}
+
+.landing-page .text-\[\#B8C0CF\] {
+  color: #B8C0CF !important;
+}
+
+.landing-page .text-\[\#155EEF\] {
+  color: #155EEF !important;
+}
+
+.landing-page .text-\[\#0E9F9A\] {
+  color: #0E9F9A !important;
+}
+
+.landing-page .text-\[\#38BDF8\] {
+  color: #38BDF8 !important;
+}

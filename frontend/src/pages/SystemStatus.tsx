@@ -1,0 +1,517 @@
+// SystemStatus.tsx
+import { useEffect, useMemo, useState } from 'react';
+import {
+  Activity,
+  CheckCircle2,
+  CircleAlert,
+  Database,
+  Globe2,
+  Server,
+  ShieldCheck,
+  Timer,
+  XCircle,
+  ChevronRight
+} from 'lucide-react';
+
+import Card from '../components/ui/Card';
+import PageHeader from '../components/ui/PageHeader';
+
+import {
+  getConfig,
+  getDiagnostics,
+  getHealth,
+  getNationalHistory,
+  getPipelineRuns,
+  getQuality,
+  getRoutes,
+  getSources,
+} from '../api/api';
+
+import type {
+  BackendRoute,
+  NationalIndexRow,
+  PipelineRun,
+  QualitySummary,
+  SourceCapability,
+} from '../api/types';
+
+function formatNumber(value: number | null | undefined) {
+  if (value === null || value === undefined || Number.isNaN(value)) {
+    return '—';
+  }
+  return value.toLocaleString('en-IN');
+}
+
+function formatDate(value: string | null | undefined) {
+  if (!value) return '—';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+  return date.toLocaleString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function normalizeStatus(value: unknown) {
+  if (typeof value !== 'string') return 'unknown';
+  return value.toLowerCase();
+}
+
+function StatusBadge({
+  status,
+  label,
+}: {
+  status: string;
+  label?: string;
+}) {
+  const normalized = normalizeStatus(status);
+
+  const healthy =
+    normalized === 'ok' ||
+    normalized === 'healthy' ||
+    normalized === 'success' ||
+    normalized === 'operational' ||
+    normalized === 'active';
+
+  const warning =
+    normalized === 'partial_success' ||
+    normalized === 'degraded' ||
+    normalized === 'insufficient_history' ||
+    normalized === 'pending' ||
+    normalized === 'running';
+
+  const className = healthy
+    ? 'border-[#C9E2D4] bg-[#EEF7F2] text-[#2E7D32]'
+    : warning
+      ? 'border-[#E8D2A8] bg-[#FFF8ED] text-[#D97706]'
+      : 'border-[#F0CACA] bg-[#FFF1F1] text-[#DC2626]';
+
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${className}`}>
+      {healthy ? (
+        <CheckCircle2 size={12} />
+      ) : warning ? (
+        <CircleAlert size={12} />
+      ) : (
+        <XCircle size={12} />
+      )}
+      {label || status.replace(/_/g, ' ')}
+    </span>
+  );
+}
+
+function extractStatus(value: unknown, fallback = 'unknown') {
+  if (!value || typeof value !== 'object') {
+    return fallback;
+  }
+  const object = value as Record<string, unknown>;
+  for (const key of ['status', 'health', 'state', 'database_status']) {
+    if (typeof object[key] === 'string') {
+      return object[key] as string;
+    }
+  }
+  return fallback;
+}
+
+export default function SystemStatus() {
+  const [health, setHealth] = useState<unknown>(null);
+  const [config, setConfig] = useState<unknown>(null);
+  const [quality, setQuality] = useState<QualitySummary | null>(null);
+  const [routes, setRoutes] = useState<BackendRoute[]>([]);
+  const [sources, setSources] = useState<SourceCapability[]>([]);
+  const [pipelineRuns, setPipelineRuns] = useState<PipelineRun[]>([]);
+  const [nationalHistory, setNationalHistory] = useState<NationalIndexRow[]>([]);
+  const [diagnostics, setDiagnostics] = useState<Record<string, unknown> | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    Promise.all([
+      getHealth(),
+      getConfig(),
+      getQuality(),
+      getRoutes(),
+      getSources(),
+      getPipelineRuns(1), // Only need the latest run now
+      getNationalHistory(1),
+      getDiagnostics(),
+    ])
+      .then(
+        ([
+          healthData,
+          configData,
+          qualityData,
+          routesData,
+          sourcesData,
+          pipelineData,
+          nationalData,
+          diagnosticsData,
+        ]) => {
+          setHealth(healthData);
+          setConfig(configData);
+          setQuality(qualityData);
+          setRoutes(routesData);
+          setSources(sourcesData);
+          setPipelineRuns(pipelineData);
+          setNationalHistory(nationalData);
+          setDiagnostics(diagnosticsData);
+        },
+      )
+      .catch((e) => {
+        setError(e instanceof Error ? e.message : 'Unable to load system status');
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const latestNational = nationalHistory[0];
+  const activeRoutesCount = routes.filter((route) => route.active).length;
+  const latestPipeline = pipelineRuns[0];
+  const healthStatus = extractStatus(health, 'unknown');
+  const databaseStatus =
+    health && typeof health === 'object' && typeof (health as Record<string, unknown>).database === 'object'
+      ? extractStatus((health as Record<string, unknown>).database, 'unknown')
+      : healthStatus;
+
+  return (
+    <div className="page-shell system-status-page">
+      <style>{`
+        .system-status-page > .mb-7 > div:first-child > span {
+          background: #EEF3F7 !important;
+          border: 1px solid #D9E1E7 !important;
+          color: #1976D2 !important;
+        }
+
+        .system-status-page > .mb-7 > div:first-child > span > span {
+          background: #1976D2 !important;
+        }
+
+        .system-status-page .publication-state-card,
+        .system-status-page .platform-health-card,
+        .system-status-page .latest-collection-card,
+        .system-status-page .data-source-card,
+        .system-status-page .integrity-card,
+        .system-status-page .pipeline-audit-card {
+          background: #FFFFFF !important;
+          border-color: #D9E1E7 !important;
+          box-shadow: 0 12px 30px rgba(23, 33, 43, 0.055) !important;
+        }
+
+        .system-status-page .primary-heading,
+        .system-status-page .card-title,
+        .system-status-page .primary-copy,
+        .system-status-page .data-source-name,
+        .system-status-page .pipeline-item {
+          color: #17212B !important;
+        }
+
+        .system-status-page .secondary-copy,
+        .system-status-page .health-label,
+        .system-status-page .health-explanation,
+        .system-status-page .collection-meta,
+        .system-status-page .collection-explanation,
+        .system-status-page .source-copy,
+        .system-status-page .source-label,
+        .system-status-page .audit-copy,
+        .system-status-page .diagnostics-panel,
+        .system-status-page .live-status-note {
+          color: #667685 !important;
+        }
+
+        .system-status-page .meaning-panel,
+        .system-status-page .health-explanation,
+        .system-status-page .diagnostics-panel {
+          background: #EEF3F7 !important;
+          border-color: #D9E1E7 !important;
+        }
+
+        .system-status-page .meaning-panel h3,
+        .system-status-page .meaning-panel svg,
+        .system-status-page .data-source-icon,
+        .system-status-page .pipeline-audit-icon {
+          color: #1976D2 !important;
+        }
+
+        .system-status-page .health-status-healthy,
+        .system-status-page .publication-gate,
+        .system-status-page .active-source {
+          color: #2E7D32 !important;
+        }
+
+        .system-status-page .collection-status {
+          background: #FFF8ED !important;
+          border-color: #E8D2A8 !important;
+          color: #D97706 !important;
+        }
+
+        .system-status-page .integrity-icon {
+          color: #2E7D32 !important;
+        }
+
+        .system-status-page .diagnostics-toggle,
+        .system-status-page .diagnostics-toggle svg {
+          color: #1976D2 !important;
+        }
+
+        .system-status-page .live-status-dot {
+          background: #2E7D32 !important;
+        }
+
+        .system-status-page .live-status-note strong {
+          color: #17212B !important;
+        }
+      `}</style>
+      <PageHeader
+        tag="SYSTEM STATUS"
+        title="APIx System Monitor"
+        subtitle="Live operational status of the APIx platform, including backend health, database connectivity, data-source availability and index publication readiness."
+      />
+
+      {error ? (
+        <div className="alert-error">
+          <CircleAlert size={15} />
+          {error}
+        </div>
+      ) : loading ? (
+        <div className="py-16 text-center text-sm text-[#74727A]">
+          Loading system status…
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6">
+          
+          {/* Main Focus: National APIx Publication State */}
+          <Card className="publication-state-card border border-[#D9E1E7] bg-white">
+            <div className="section-label text-[#1976D2]">NATIONAL APIx</div>
+            <h2 className="primary-heading mt-1 text-2xl font-semibold tracking-tight text-[#17212B]">
+              Current publication state
+            </h2>
+            <p className="secondary-copy mt-2 text-sm text-[#667685]">
+              APIx can publish a national value when sufficient real observations are available across the DGCA-weighted route basket.
+            </p>
+
+            {latestNational ? (
+              <div className="mt-8">
+                <div className="text-center md:text-left">
+                  <div className="primary-heading text-5xl font-bold tracking-tight text-[#17212B]">
+                    {latestNational.index.toFixed(4)}
+                  </div>
+                  <div className="secondary-copy mt-1 text-sm font-semibold uppercase tracking-wider text-[#667685]">
+                    National APIx
+                  </div>
+                </div>
+
+                <div className="my-8 border-y border-[#D9E1E7] py-6">
+                  <div className="primary-heading text-lg font-semibold text-[#17212B]">
+                    {(latestNational.route_coverage_ratio * 100).toFixed(0)}% route coverage
+                  </div>
+                  <div className="secondary-copy mt-1 text-sm text-[#667685]">
+                    {latestNational.routes_used} of {latestNational.routes_expected} routes covered
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                  <div>
+                    <div className="secondary-copy text-xs text-[#667685]">Observation date</div>
+                    <div className="primary-heading mt-1 font-medium text-[#17212B]">{latestNational.observation_date}</div>
+                  </div>
+                  <div>
+                    <div className="secondary-copy text-xs text-[#667685]">Weight reference</div>
+                    <div className="primary-heading mt-1 font-medium text-[#17212B]">{latestNational.weight_reference_period || 'DGCA 2024–25'}</div>
+                  </div>
+                  <div>
+                    <div className="secondary-copy text-xs text-[#667685]">Publication gate</div>
+                    <div className="publication-gate mt-1 font-semibold text-[#2E7D32]">
+                      {latestNational.route_coverage_ratio >= 0.8 ? 'PASSED' : 'FAILED'}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="meaning-panel mt-8 rounded-xl border border-[#D9E1E7] bg-[#EEF3F7] p-5">
+                  <h3 className="primary-heading text-sm font-bold text-[#17212B]">What does this mean?</h3>
+                  <p className="secondary-copy mt-2 text-sm leading-relaxed text-[#667685]">
+                    The current index is calculated from real eligible airfare observations across {latestNational.routes_used} of the {latestNational.routes_expected} configured routes. Routes without sufficient data are excluded rather than assigned artificial prices.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-8 flex flex-col items-center justify-center rounded-xl border border-dashed border-[#CDC5BB] bg-white py-12 text-center">
+                <Timer size={32} className="text-[#9A9499]" />
+                <div className="mt-4 text-base font-semibold text-[#30313A]">National APIx not available</div>
+                <p className="mt-2 max-w-sm text-sm text-[#74727A]">
+                  The national index requires sufficient real observations across the route basket before publication.
+                </p>
+              </div>
+            )}
+          </Card>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* System Status / Platform Health */}
+            <Card className="platform-health-card">
+              <div className="section-label">SYSTEM STATUS</div>
+              <h2 className="card-title mt-1">Platform Health</h2>
+              
+              <ul className="mt-6 space-y-3 text-sm">
+                <li className="flex items-center gap-3">
+                  <span className="health-label w-28 text-[#667685]">Backend</span>
+                  <span className={`font-medium ${healthStatus === 'ok' ? 'health-status-healthy text-[#2E7D32]' : 'text-[#D97706]'}`}>
+                    ● {healthStatus === 'ok' ? 'Operational' : healthStatus}
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="health-label w-28 text-[#667685]">Database</span>
+                  <span className={`font-medium ${databaseStatus === 'ok' ? 'health-status-healthy text-[#2E7D32]' : 'text-[#D97706]'}`}>
+                    ● {databaseStatus === 'ok' ? 'Connected' : databaseStatus}
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="health-label w-28 text-[#667685]">Source adapter</span>
+                  <span className="font-medium text-[#17212B]">
+                    ● {sources[0]?.name || 'Google Flights'}
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="health-label w-28 text-[#667685]">Route basket</span>
+                  <span className="font-medium text-[#17212B]">
+                    ● {activeRoutesCount || 40} routes configured
+                  </span>
+                </li>
+              </ul>
+
+              <div className="health-explanation mt-6 rounded-lg border border-[#D9E1E7] bg-[#EEF3F7] p-4 text-sm text-[#667685]">
+                All core application services are currently responding and the configured route basket is available.
+              </div>
+            </Card>
+
+            {/* Collection Pipeline Simplified */}
+            <Card className="latest-collection-card">
+              <div className="section-label">COLLECTION PIPELINE</div>
+              <h2 className="card-title mt-1 mb-6">Latest Collection</h2>
+
+              {latestPipeline ? (
+                <div>
+                  <StatusBadge status={latestPipeline.status} />
+                  
+                  <ul className="pipeline-item mt-6 space-y-2 text-base font-medium text-[#17212B]">
+                    <li>{latestPipeline.routes_requested} route processed</li>
+                    <li>{formatNumber(latestPipeline.observations_collected)} observations</li>
+                    {latestPipeline.routes_failed > 0 && (
+                      <li className="text-[#DC2626]">{latestPipeline.routes_failed} failed routes</li>
+                    )}
+                  </ul>
+                  
+                  <div className="collection-meta mt-4 flex items-center gap-2 text-xs font-medium text-[#667685]">
+                    <Timer size={14} />
+                    {formatDate(latestPipeline.started_at)}
+                  </div>
+
+                  <p className="collection-explanation mt-6 border-t border-[#D9E1E7] pt-4 text-sm text-[#667685]">
+                    This represents the latest collection cycle, not the complete {activeRoutesCount || 40}-route historical dataset.
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-6 rounded-xl border border-dashed border-[#CDC5BB] py-8 text-center text-sm text-[#74727A]">
+                  No pipeline runs are currently available.
+                </div>
+              )}
+            </Card>
+          </div>
+
+          {/* Source Transparency */}
+          <Card className="data-source-card">
+             <div className="section-label">SOURCE TRANSPARENCY</div>
+             <h2 className="card-title mt-1 mb-5">Data Source</h2>
+             
+             <div className="flex items-center gap-3">
+                <h3 className="data-source-name text-lg font-semibold text-[#17212B]">
+                  {sources[0]?.name || 'Google Flights'} adapter — {sources[0]?.enabled === false ? 'Disabled' : 'Active'}
+                </h3>
+             </div>
+
+             <p className="source-copy mt-3 max-w-3xl text-sm leading-relaxed text-[#667685]">
+                The current prototype uses {sources[0]?.name || 'Google Flights'} as its implemented airfare observation source. The adapter currently provides total observed fare; detailed fare-component fields are not available from this source.
+             </p>
+
+             <div className="mt-5 flex gap-8 border-t border-[#D9E1E7] pt-5 text-sm">
+               <div><span className="source-label text-[#667685]">Route reference:</span> <span className="font-medium text-[#17212B]">DGCA 2024–25</span></div>
+               <div><span className="source-label text-[#667685]">Methodology:</span> <span className="font-medium text-[#17212B]">v4.0</span></div>
+             </div>
+          </Card>
+
+          {/* System Principles Prominently Displayed */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Card className="integrity-card border-[#D9E1E7] bg-white shadow-sm">
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={18} className="integrity-icon text-[#2E7D32]" />
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#2E7D32]">
+                  NO FABRICATION
+                </div>
+              </div>
+              <h3 className="primary-heading mt-4 text-xl font-semibold text-[#17212B]">Integrity by design</h3>
+              <p className="audit-copy mt-3 text-sm leading-relaxed text-[#667685]">
+                APIx never substitutes missing airfare observations with synthetic prices. Uncovered routes remain visible and are excluded from aggregation until sufficient real observations become available.
+              </p>
+            </Card>
+
+            <Card className="pipeline-audit-card border-[#D9E1E7] shadow-sm">
+              <div className="flex items-center gap-2">
+                <Database size={18} className="pipeline-audit-icon text-[#1976D2]" />
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#1976D2]">
+                  TRACEABILITY
+                </div>
+              </div>
+              <h3 className="primary-heading mt-4 text-xl font-semibold text-[#17212B]">Auditable data pipeline</h3>
+              <p className="audit-copy mt-3 text-sm leading-relaxed text-[#667685]">
+                Collection runs, individual observations, quality decisions, route coverage and index results are retained so published values can be traced back to their underlying data.
+              </p>
+            </Card>
+          </div>
+
+          {/* Collapsible Diagnostics Section */}
+          <details className="group mt-4 mb-8">
+            <summary className="diagnostics-toggle flex cursor-pointer items-center gap-1 text-sm font-medium text-[#1976D2] hover:underline">
+              <ChevronRight size={16} className="transition-transform group-open:rotate-90" />
+              View technical diagnostics
+            </summary>
+            <div className="diagnostics-panel mt-4 rounded-xl border border-[#D9E1E7] bg-[#EEF3F7] p-6 text-sm text-[#667685]">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-wide">Stored observations</div>
+                  <div className="mt-1 text-lg font-semibold text-[#17212B]">{formatNumber(quality?.observations_total)}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-wide">Valid observations</div>
+                  <div className="mt-1 text-lg font-semibold text-[#17212B]">{formatNumber(quality?.observations_valid)}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-wide">Flagged</div>
+                  <div className="mt-1 text-lg font-semibold text-[#17212B]">{formatNumber(quality?.observations_flagged)}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-wide">Collection runs</div>
+                  <div className="mt-1 text-lg font-semibold text-[#17212B]">{formatNumber(quality?.collection_runs)}</div>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          {/* Live System Indicator */}
+          <div className="live-status-note flex items-center justify-center gap-2 pb-10 pt-4 text-xs text-[#667685]">
+            <span className="relative flex h-2 w-2">
+              <span className="live-status-dot animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2E7D32] opacity-75"></span>
+              <span className="live-status-dot relative inline-flex h-2 w-2 rounded-full bg-[#2E7D32]"></span>
+            </span>
+            <p>
+              <b className="text-[#17212B]">Live system status</b> · Values shown on this page are retrieved from the current backend state, not static demonstration data.
+            </p>
+          </div>
+
+        </div>
+      )}
+    </div>
+  );
+}

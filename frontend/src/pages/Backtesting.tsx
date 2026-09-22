@@ -1,0 +1,504 @@
+import { useEffect, useState } from 'react';
+import {
+  AlertCircle,
+  BarChart3,
+  CheckCircle2,
+  Clock3,
+  Database,
+  Info,
+} from 'lucide-react';
+
+import Card from '../components/ui/Card';
+import PageHeader from '../components/ui/PageHeader';
+import { getBacktestRuns } from '../api/api';
+import type { BacktestRun } from '../api/types';
+
+function statusTone(status: string) {
+  const value = status.toLowerCase();
+
+  if (value === 'success' || value === 'passed') {
+    return 'bg-[#EEF5F0] text-[#4E8066] border-[#C5DDCC]';
+  }
+
+  if (
+    value === 'insufficient_history' ||
+    value === 'pending' ||
+    value === 'running'
+  ) {
+    return 'bg-[#F7F2E7] text-[#95672D] border-[#E1CFAB]';
+  }
+
+  return 'bg-[#F7ECEA] text-[#A85C57] border-[#E7C1BC]';
+}
+
+function formatStatus(status: string) {
+  return status.replace(/_/g, ' ');
+}
+
+function formatDate(value: string | null) {
+  if (!value) return '—';
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toLocaleString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function metricValue(value: number | null | undefined) {
+  if (value === null || value === undefined) return '—';
+
+  if (Math.abs(value) >= 1000) {
+    return value.toLocaleString('en-IN', {
+      maximumFractionDigits: 2,
+    });
+  }
+
+  return value.toFixed(4);
+}
+
+export default function Backtesting() {
+  const [runs, setRuns] = useState<BacktestRun[]>([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getBacktestRuns(20)
+      .then(setRuns)
+      .catch((e) => {
+        setError(
+          e instanceof Error
+            ? e.message
+            : 'Unable to load backtest history',
+        );
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const latest = runs[0];
+
+  const insufficientHistory =
+    latest?.status?.toLowerCase() === 'insufficient_history';
+
+  return (
+    <div className="page-shell backtesting-page">
+      <style>{`
+        .backtesting-page > .mb-7 > div:first-child > span {
+          background: #EEF3F7 !important;
+          border: 1px solid #D9E1E7 !important;
+          color: #1976D2 !important;
+        }
+
+        .backtesting-page > .mb-7 > div:first-child > span > span {
+          background: #1976D2 !important;
+        }
+
+        .backtesting-page .validation-state-card,
+        .backtesting-page .no-backtest-results-card {
+          background: #FFFFFF !important;
+          border-color: #D9E1E7 !important;
+          box-shadow: 0 12px 30px rgba(23, 33, 43, 0.055) !important;
+        }
+
+        .backtesting-page .validation-state-icon {
+          background: #EEF7F2 !important;
+          color: #2E7D32 !important;
+        }
+
+        .backtesting-page .validation-state-heading,
+        .backtesting-page .no-results-heading {
+          color: #17212B !important;
+        }
+
+        .backtesting-page .validation-state-copy,
+        .backtesting-page .no-results-copy {
+          color: #667685 !important;
+        }
+
+        .backtesting-page .no-results-icon {
+          background: #EEF3F7 !important;
+          color: #1976D2 !important;
+        }
+      `}</style>
+      <PageHeader
+        tag="VALIDATION"
+        title="Backtesting"
+        subtitle="Historical validation of APIx calculations against accumulated real observations and reference data."
+      />
+
+      {error ? (
+        <div className="alert-error">
+          <Info size={15} />
+          {error}
+        </div>
+      ) : loading ? (
+        <div className="py-16 text-center text-sm text-[#74727A]">
+          Loading backtest history…
+        </div>
+      ) : (
+        <>
+          {/* Current validation state */}
+          <Card className="validation-state-card mb-5">
+            <div className="flex items-start gap-3">
+              <div
+                className={`validation-state-icon mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                  insufficientHistory
+                    ? 'bg-[#F7F2E7] text-[#95672D]'
+                    : 'bg-[#EEF5F0] text-[#4E8066]'
+                }`}
+              >
+                {insufficientHistory ? (
+                  <Clock3 size={18} />
+                ) : (
+                  <CheckCircle2 size={18} />
+                )}
+              </div>
+
+              <div className="min-w-0">
+                <div className="section-label">
+                  CURRENT VALIDATION STATE
+                </div>
+
+                <h2 className="validation-state-heading mt-1 text-base font-semibold text-[#17212B]">
+                  {latest
+                    ? formatStatus(latest.status)
+                    : 'No backtest run available'}
+                </h2>
+
+                <p className="validation-state-copy mt-2 max-w-3xl text-xs leading-6 text-[#667685]">
+                  {insufficientHistory
+                    ? 'The backtest is waiting for enough real daily National APIx history. The backend does not manufacture historical observations to satisfy the 30-day requirement.'
+                    : latest
+                      ? 'The latest stored backtest result is shown below using the backend calculation and its recorded reference data.'
+                      : 'No completed backtest result is currently stored. A valid reference dataset and sufficient accumulated history are required before a result can be reported.'}
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          {latest ? (
+            <>
+              {/* Latest run */}
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Card>
+                  <div className="section-label">STATUS</div>
+
+                  <div className="mt-4">
+                    <span
+                      className={`inline-flex rounded-full border px-3 py-1.5 text-xs font-semibold capitalize ${statusTone(
+                        latest.status,
+                      )}`}
+                    >
+                      {formatStatus(latest.status)}
+                    </span>
+                  </div>
+                </Card>
+
+                <Card>
+                  <div className="section-label">OBSERVATIONS COMPARED</div>
+
+                  <div className="mt-3 text-3xl font-semibold tracking-tight text-[#30313A]">
+                    {latest.observations_compared.toLocaleString('en-IN')}
+                  </div>
+
+                  <div className="mt-1 text-xs text-[#74727A]">
+                    Historical observations used
+                  </div>
+                </Card>
+
+                <Card>
+                  <div className="section-label">ROUTES COMPARED</div>
+
+                  <div className="mt-3 text-3xl font-semibold tracking-tight text-[#30313A]">
+                    {latest.routes_compared.toLocaleString('en-IN')}
+                  </div>
+
+                  <div className="mt-1 text-xs text-[#74727A]">
+                    Routes included in validation
+                  </div>
+                </Card>
+
+                <Card>
+                  <div className="section-label">METHODOLOGY</div>
+
+                  <div className="mt-3 text-xl font-semibold tracking-tight text-[#30313A]">
+                    v{latest.methodology_version}
+                  </div>
+
+                  <div className="mt-1 text-xs text-[#74727A]">
+                    Calculation version
+                  </div>
+                </Card>
+              </div>
+
+              {/* Insufficient history explanation */}
+              {insufficientHistory && (
+                <Card className="mt-4 border-[#E1CFAB] bg-[#FBF8F3]">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle
+                      size={18}
+                      className="mt-0.5 shrink-0 text-[#95672D]"
+                    />
+
+                    <div>
+                      <div className="text-sm font-semibold text-[#8E5A33]">
+                        30-day backtest not yet reportable
+                      </div>
+
+                      <p className="mt-2 text-xs leading-6 text-[#74727A]">
+                        The current system has only a small amount of
+                        accumulated daily National APIx history. A
+                        30-day backtest requires enough real historical
+                        periods to make the comparison meaningful.
+                      </p>
+
+                      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                        <div className="rounded-xl border border-[#EDE1C7] bg-white p-4">
+                          <div className="text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                            Required
+                          </div>
+
+                          <div className="mt-2 text-lg font-semibold text-[#30313A]">
+                            30 days
+                          </div>
+                        </div>
+
+                        <div className="rounded-xl border border-[#EDE1C7] bg-white p-4">
+                          <div className="text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                            Currently available
+                          </div>
+
+                          <div className="mt-2 text-lg font-semibold text-[#30313A]">
+                            {latest.metrics?.available_daily_periods ??
+                              '—'}{' '}
+                            days
+                          </div>
+                        </div>
+
+                        <div className="rounded-xl border border-[#EDE1C7] bg-white p-4">
+                          <div className="text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                            Action
+                          </div>
+
+                          <div className="mt-2 text-sm font-semibold text-[#30313A]">
+                            Continue collection
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              )}
+
+              {/* Metrics */}
+              <Card className="mt-4">
+                <div className="flex items-center gap-2">
+                  <BarChart3
+                    size={16}
+                    className="text-[#6B5A78]"
+                  />
+
+                  <div>
+                    <div className="section-label">
+                      VALIDATION METRICS
+                    </div>
+
+                    <h2 className="card-title">
+                      Recorded backtest measurements
+                    </h2>
+                  </div>
+                </div>
+
+                {Object.keys(latest.metrics || {}).length > 0 ? (
+                  <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    {Object.entries(latest.metrics).map(
+                      ([key, value]) => (
+                        <div
+                          key={key}
+                          className="rounded-xl border border-[#DCD7CE] bg-[#F6F2EC] p-4"
+                        >
+                          <div className="text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                            {key.replace(/_/g, ' ')}
+                          </div>
+
+                          <div className="mt-2 text-xl font-semibold text-[#30313A]">
+                            {metricValue(value)}
+                          </div>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                ) : (
+                  <div className="mt-5 rounded-xl border border-dashed border-[#CDC5BB] p-8 text-center">
+                    <div className="text-sm font-medium text-[#30313A]">
+                      No comparison metrics available
+                    </div>
+
+                    <p className="mt-2 text-xs text-[#74727A]">
+                      Metrics will appear once a reportable backtest
+                      has sufficient real historical data.
+                    </p>
+                  </div>
+                )}
+              </Card>
+
+              {/* Run metadata */}
+              <Card className="mt-4">
+                <div className="flex items-center gap-2">
+                  <Database
+                    size={16}
+                    className="text-[#6B5A78]"
+                  />
+
+                  <div>
+                    <div className="section-label">
+                      RUN METADATA
+                    </div>
+
+                    <h2 className="card-title">
+                      Backtest provenance
+                    </h2>
+                  </div>
+                </div>
+
+                <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">
+                  <div className="rounded-xl bg-[#F6F2EC] p-4">
+                    <div className="text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                      Reference source
+                    </div>
+
+                    <div className="mt-2 text-sm font-semibold text-[#30313A]">
+                      {latest.reference_source || '—'}
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl bg-[#F6F2EC] p-4">
+                    <div className="text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                      Started
+                    </div>
+
+                    <div className="mt-2 text-sm font-semibold text-[#30313A]">
+                      {formatDate(latest.started_at)}
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl bg-[#F6F2EC] p-4">
+                    <div className="text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                      Finished
+                    </div>
+
+                    <div className="mt-2 text-sm font-semibold text-[#30313A]">
+                      {formatDate(latest.finished_at)}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Run history */}
+              <Card className="mt-4">
+                <div className="section-label">
+                  BACKTEST RUN HISTORY
+                </div>
+
+                <div className="mt-4 overflow-x-auto">
+                  <table className="w-full min-w-[720px] text-left">
+                    <thead>
+                      <tr className="border-b border-[#E1DBD2]">
+                        <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                          Run
+                        </th>
+
+                        <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                          Status
+                        </th>
+
+                        <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                          Observations
+                        </th>
+
+                        <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                          Routes
+                        </th>
+
+                        <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-[#74727A]">
+                          Started
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {runs.map((run) => (
+                        <tr
+                          key={run.backtest_run_id}
+                          className="border-b border-[#ECE8E1] last:border-0"
+                        >
+                          <td className="px-3 py-3 font-mono text-[10px] text-[#74727A]">
+                            {run.backtest_run_id.slice(0, 12)}…
+                          </td>
+
+                          <td className="px-3 py-3">
+                            <span
+                              className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold capitalize ${statusTone(
+                                run.status,
+                              )}`}
+                            >
+                              {formatStatus(run.status)}
+                            </span>
+                          </td>
+
+                          <td className="px-3 py-3 text-xs text-[#30313A]">
+                            {run.observations_compared.toLocaleString(
+                              'en-IN',
+                            )}
+                          </td>
+
+                          <td className="px-3 py-3 text-xs text-[#30313A]">
+                            {run.routes_compared}
+                          </td>
+
+                          <td className="px-3 py-3 text-xs text-[#74727A]">
+                            {formatDate(run.started_at)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </>
+          ) : (
+            <Card className="no-backtest-results-card">
+              <div className="flex items-start gap-3">
+                <Info
+                  size={18}
+                  className="no-results-icon mt-0.5 rounded-xl bg-[#EEF3F7] p-2 text-[#1976D2]"
+                />
+
+                <div>
+                  <h2 className="no-results-heading text-sm font-semibold text-[#17212B]">
+                    No backtest results are stored yet
+                  </h2>
+
+                  <p className="no-results-copy mt-2 text-xs leading-6 text-[#667685]">
+                    The system will report a backtest only when the
+                    required real historical data and reference inputs
+                    are available. No synthetic airfare observations
+                    are used to fill the gap.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
