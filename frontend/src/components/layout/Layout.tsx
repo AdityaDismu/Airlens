@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 import { getHealth } from '../../api/api';
-import ApixAssistant from '../assistant/ApixAssistant';
+import AirlensAssistant from '../assistant/AirlensAssistant';
 
 export default function Layout() {
   const [open, setOpen] = useState(false);
@@ -36,7 +36,7 @@ export default function Layout() {
         <main className="min-h-0 flex-1 overflow-y-auto">
           <Outlet />
         </main>
-        <ApixAssistant />
+        <AirlensAssistant />
       </div>
     </div>
   );

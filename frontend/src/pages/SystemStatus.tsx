@@ -268,8 +268,8 @@ export default function SystemStatus() {
       `}</style>
       <PageHeader
         tag="SYSTEM STATUS"
-        title="APIx System Monitor"
-        subtitle="Live operational status of the APIx platform, including backend health, database connectivity, data-source availability and index publication readiness."
+        title="Airlens System Monitor"
+        subtitle="Live operational status of the Airlens platform, including backend health, database connectivity, data-source availability and index publication readiness."
       />
 
       {error ? (
@@ -284,14 +284,14 @@ export default function SystemStatus() {
       ) : (
         <div className="flex flex-col gap-6">
           
-          {/* Main Focus: National APIx Publication State */}
+          {/* Main Focus: National Airlens Publication State */}
           <Card className="publication-state-card border border-[#D9E1E7] bg-white">
-            <div className="section-label text-[#1976D2]">NATIONAL APIx</div>
+            <div className="section-label text-[#1976D2]">NATIONAL Airlens</div>
             <h2 className="primary-heading mt-1 text-2xl font-semibold tracking-tight text-[#17212B]">
               Current publication state
             </h2>
             <p className="secondary-copy mt-2 text-sm text-[#667685]">
-              APIx can publish a national value when sufficient real observations are available across the DGCA-weighted route basket.
+              Airlens can publish a national value when sufficient real observations are available across the DGCA-weighted route basket.
             </p>
 
             {latestNational ? (
@@ -301,7 +301,7 @@ export default function SystemStatus() {
                     {latestNational.index.toFixed(4)}
                   </div>
                   <div className="secondary-copy mt-1 text-sm font-semibold uppercase tracking-wider text-[#667685]">
-                    National APIx
+                    National Airlens
                   </div>
                 </div>
 
@@ -341,7 +341,7 @@ export default function SystemStatus() {
             ) : (
               <div className="mt-8 flex flex-col items-center justify-center rounded-xl border border-dashed border-[#CDC5BB] bg-white py-12 text-center">
                 <Timer size={32} className="text-[#9A9499]" />
-                <div className="mt-4 text-base font-semibold text-[#30313A]">National APIx not available</div>
+                <div className="mt-4 text-base font-semibold text-[#30313A]">National Airlens not available</div>
                 <p className="mt-2 max-w-sm text-sm text-[#74727A]">
                   The national index requires sufficient real observations across the route basket before publication.
                 </p>
@@ -453,7 +453,7 @@ export default function SystemStatus() {
               </div>
               <h3 className="primary-heading mt-4 text-xl font-semibold text-[#17212B]">Integrity by design</h3>
               <p className="audit-copy mt-3 text-sm leading-relaxed text-[#667685]">
-                APIx never substitutes missing airfare observations with synthetic prices. Uncovered routes remain visible and are excluded from aggregation until sufficient real observations become available.
+                Airlens never substitutes missing airfare observations with synthetic prices. Uncovered routes remain visible and are excluded from aggregation until sufficient real observations become available.
               </p>
             </Card>
 

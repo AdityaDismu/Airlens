@@ -21,7 +21,7 @@ const pageNames: Record<string, string> = {
 
 export default function TopBar({ onMenuClick, onRefresh, lastUpdated, pipelineOnline = true }: Props) {
   const location = useLocation();
-  const title = pageNames[location.pathname] || 'APIx';
+  const title = pageNames[location.pathname] || 'Airlens';
   const t = lastUpdated
     ? new Date(lastUpdated).toLocaleTimeString('en-IN', {
         hour: '2-digit',
@@ -37,7 +37,7 @@ export default function TopBar({ onMenuClick, onRefresh, lastUpdated, pipelineOn
       </button>
 
       <div className="min-w-0 flex-1">
-        <div className="text-[9px] font-extrabold uppercase tracking-[0.15em] text-[#667685]">APIx workspace</div>
+        <div className="text-[9px] font-extrabold uppercase tracking-[0.15em] text-[#667685]">Airlens workspace</div>
         <div className="truncate text-sm font-extrabold tracking-[-0.015em] text-[#17212B]">{title}</div>
       </div>
 

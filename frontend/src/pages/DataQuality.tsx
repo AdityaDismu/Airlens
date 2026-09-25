@@ -334,7 +334,7 @@ export default function DataQuality() {
       <PageHeader
         tag="DATA QUALITY"
         title="Data Quality & Validation"
-        subtitle="Quality-control evidence for the airfare observations entering the APIx calculation pipeline."
+        subtitle="Quality-control evidence for the airfare observations entering the Airlens calculation pipeline."
       />
 
       {error ? (
@@ -445,7 +445,7 @@ export default function DataQuality() {
                   <p className="fare-detail-copy mt-2 text-xs leading-5 text-[#667685]">
                     The current Google Flights source provides total
                     consumer fare, but does not expose a complete breakdown
-                    of base fare, taxes and fees. APIx therefore uses the
+                    of base fare, taxes and fees. Airlens therefore uses the
                     observed total fare rather than reconstructing
                     unavailable components.
                   </p>
@@ -463,7 +463,7 @@ export default function DataQuality() {
 
               <div>
                 <div className="section-label">
-                  NATIONAL APIx ELIGIBILITY
+                  NATIONAL Airlens ELIGIBILITY
                 </div>
 
                 <h2 className="eligibility-heading mt-1 text-base font-semibold text-[#17212B]">
@@ -472,7 +472,7 @@ export default function DataQuality() {
 
                 <p className="eligibility-copy mt-2 max-w-3xl text-xs leading-6 text-[#667685]">
                   Database-wide quality counts describe the complete stored
-                  dataset. The National APIx calculation uses only
+                  dataset. The National Airlens calculation uses only
                   observations that pass the implemented eligibility rules
                   for the covered route basket and lead-time windows.
                 </p>
@@ -875,7 +875,7 @@ export default function DataQuality() {
               </div>
 
               <p className="integrity-copy mt-3 text-xs leading-6 text-[#667685]">
-                APIx never replaces missing or rejected airfare
+                Airlens never replaces missing or rejected airfare
                 observations with invented prices. Routes without
                 sufficient eligible observations remain uncovered,
                 preserving the integrity of the index.

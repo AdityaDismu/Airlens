@@ -327,7 +327,7 @@ export default function RouteExplorer() {
       <PageHeader
         tag="ROUTE EXPLORER"
         title="Route Explorer"
-        subtitle="Inspect live collected observations, route-level APIx history, lead-time behaviour and calculation inputs for a selected city pair."
+        subtitle="Inspect live collected observations, route-level Airlens history, lead-time behaviour and calculation inputs for a selected city pair."
       />
 
       <Card className="mb-4 !px-5 !py-4">
@@ -410,7 +410,7 @@ export default function RouteExplorer() {
         <>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
             <Card>
-              <div className="section-label">ROUTE APIx</div>
+              <div className="section-label">ROUTE Airlens</div>
 
               <div className="mt-2 text-4xl font-bold font-mono">
                 {latest?.index.toFixed(2) ?? '—'}
@@ -462,7 +462,7 @@ export default function RouteExplorer() {
             <div className="lg:col-span-2">
               <TrendChart
                 data={trend}
-                title={`${origin} → ${destination} APIx history`}
+                title={`${origin} → ${destination} Airlens history`}
               />
             </div>
           </div>
@@ -781,7 +781,7 @@ export default function RouteExplorer() {
                     className="inline mr-2"
                   />
                   The source did not expose a complete
-                  fare-component breakdown. APIx uses the
+                  fare-component breakdown. Airlens uses the
                   observed total mandatory fare and leaves
                   unavailable components null.
                 </div>

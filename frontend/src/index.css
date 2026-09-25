@@ -103,7 +103,7 @@ body {
 @media(max-width:640px){.page-shell{padding:18px 14px 42px}.page-header-row{flex-direction:column}.page-title{font-size:23px}}
 
 /* --------------------------------------------------------------------------
-   APIx application-shell redesign
+   Airlens application-shell redesign
    The landing page intentionally keeps the original global theme. These
    variables are inherited only by pages rendered inside .app-shell.
    -------------------------------------------------------------------------- */

@@ -34,7 +34,7 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
         </span>
       </div>
       <div className="flex items-center justify-between my-1">
-        <span className="text-slate-400">APIx Index</span>
+        <span className="text-slate-400">Airlens Index</span>
         <span className="font-bold text-blue-400 text-sm">{d.value.toFixed(2)}</span>
       </div>
       {d.observations !== undefined && (

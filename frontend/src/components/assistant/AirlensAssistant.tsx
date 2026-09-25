@@ -20,10 +20,10 @@ type Message = {
 };
 
 const QUICK = [
-  'What is the current APIx?',
+  'What is the current Airlens?',
   'Why is coverage 95%?',
   'Explain this page',
-  'How is APIx calculated?',
+  'How is Airlens calculated?',
 ];
 
 const ROUTES: Record<string, { path: string; label: string }> = {
@@ -89,8 +89,8 @@ function classify(q: string) {
   }
 
   if (
-    text.includes('how is apix') ||
-    text.includes('how does apix') ||
+    text.includes('how is airlens') ||
+    text.includes('how does airlens') ||
     text.includes('calculate') ||
     text.includes('formula') ||
     text.includes('route weight') ||
@@ -100,7 +100,7 @@ function classify(q: string) {
   }
 
   if (
-    text.includes('apix') ||
+    text.includes('airlens') ||
     text.includes('index') ||
     text.includes('coverage') ||
     text.includes('observation') ||
@@ -129,9 +129,9 @@ function classify(q: string) {
 function explainPage(pathname: string) {
   const explanations: Record<string, string> = {
     '/dashboard':
-      'The Dashboard is the executive view of APIx. It combines the current national airfare signal with route coverage, observation volume, the reference route and lead-time pricing behavior.',
+      'The Dashboard is the executive view of Airlens. It combines the current national airfare signal with route coverage, observation volume, the reference route and lead-time pricing behavior.',
     '/routes':
-      'Route Explorer lets you inspect a directional route, including its APIx history, coverage, lead-time windows, observations and route metadata.',
+      'Route Explorer lets you inspect a directional route, including its Airlens history, coverage, lead-time windows, observations and route metadata.',
     '/analytics':
       'Analytics is for interpreting market behavior: route movement, lead-time pricing patterns and analytical signals derived from collected observations.',
     '/quality':
@@ -139,9 +139,9 @@ function explainPage(pathname: string) {
     '/pipeline':
       'Collection Pipeline shows the operational path from collection through validation, cleaning, database import and index generation. It reports actual persisted runs.',
     '/backtesting':
-      'Backtesting compares APIx movement with a legitimate independent reference series. Missing historical periods are preserved instead of being fabricated.',
+      'Backtesting compares Airlens movement with a legitimate independent reference series. Missing historical periods are preserved instead of being fabricated.',
     '/methodology':
-      'Methodology explains how APIx converts live airfare observations into route and national indicators, including lead-time windows, geometric-mean aggregation and DGCA route weights.',
+      'Methodology explains how Airlens converts live airfare observations into route and national indicators, including lead-time windows, geometric-mean aggregation and DGCA route weights.',
     '/system':
       'System Status is the operational health view. It reports backend/database availability, source capability and the latest pipeline state.',
   };
@@ -193,7 +193,7 @@ async function liveAnswer(question: string) {
 
   if (question.includes('route')) {
     return {
-      text: `The configured APIx basket currently contains ${routes.length} directional routes. Use Route Explorer to inspect an individual route.`,
+      text: `The configured Airlens basket currently contains ${routes.length} directional routes. Use Route Explorer to inspect an individual route.`,
       action: { label: 'Open Route Explorer', path: '/routes' },
     };
   }
@@ -217,13 +217,13 @@ async function liveAnswer(question: string) {
 
   if (question.includes('backtest')) {
     return {
-      text: 'Backtesting compares APIx movement with a legitimate independent reference series. If enough overlapping history is not available, the backend reports that limitation rather than fabricating a result.',
+      text: 'Backtesting compares Airlens movement with a legitimate independent reference series. If enough overlapping history is not available, the backend reports that limitation rather than fabricating a result.',
       action: { label: 'Open Backtesting', path: '/backtesting' },
     };
   }
 
-  if (question.includes('current') || question.includes('now') || question.includes('national') || question.includes('what is apix')) {
-    if (!latest) return { text: 'A national APIx snapshot is not available yet.' };
+  if (question.includes('current') || question.includes('now') || question.includes('national') || question.includes('what is airlens')) {
+    if (!latest) return { text: 'A national Airlens snapshot is not available yet.' };
 
     const baseChange = (((latest.index / 100) - 1) * 100).toFixed(3);
     const previous = national.length > 1 ? national[1] : null;
@@ -231,7 +231,7 @@ async function liveAnswer(question: string) {
 
     return {
       text:
-        `The latest National APIx is ${latest.index.toFixed(4)}. ` +
+        `The latest National Airlens is ${latest.index.toFixed(4)}. ` +
         `With 100 as the prototype base, that is ${baseChange}% relative to the base. ` +
         `${movement === null ? 'There is not yet enough stored national history for a snapshot-to-snapshot movement.' : `The change from the previous stored snapshot is ${movement >= 0 ? '+' : ''}${movement.toFixed(4)} index points.`} ` +
         `Coverage is ${pct(latest.route_coverage_ratio)} across ${latest.routes_used}/${latest.routes_expected} routes, using ${latest.observations_used.toLocaleString('en-IN')} observations.`,
@@ -239,11 +239,11 @@ async function liveAnswer(question: string) {
   }
 
   return {
-    text: 'I can answer questions about the current APIx data, methodology, quality and collection pipeline. Try “What is the current APIx?” or “Why is coverage 95%?”',
+    text: 'I can answer questions about the current Airlens data, methodology, quality and collection pipeline. Try “What is the current Airlens?” or “Why is coverage 95%?”',
   };
 }
 
-export default function ApixAssistant() {
+export default function AirlensAssistant() {
   const location = useLocation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -254,7 +254,7 @@ export default function ApixAssistant() {
     {
       id: 1,
       role: 'assistant',
-      text: 'Hi! I’m the APIx Assistant. I can explain the live airfare index, help you navigate the portal, and answer questions using the current backend data.',
+      text: 'Hi! I’m the Airlens Assistant. I can explain the live airfare index, help you navigate the portal, and answer questions using the current backend data.',
     },
   ]);
   const endRef = useRef<HTMLDivElement>(null);
@@ -296,7 +296,7 @@ export default function ApixAssistant() {
         addMessage({
           role: 'assistant',
           text:
-            `APIx uses ${m.base_index} as its base index and currently uses ${m.lead_time_windows.map(x => `T+${x}`).join(', ')} lead-time windows. ` +
+            `Airlens uses ${m.base_index} as its base index and currently uses ${m.lead_time_windows.map(x => `T+${x}`).join(', ')} lead-time windows. ` +
             `${m.elementary_formula} ${m.national_aggregation} Missing sources are recorded rather than replaced with fabricated fares.`,
           action: { label: 'Open Methodology', path: '/methodology' },
         });
@@ -306,13 +306,13 @@ export default function ApixAssistant() {
       } else {
         addMessage({
           role: 'assistant',
-          text: 'I’m focused on APIx navigation and factual explanations. Try “What is the current APIx?”, “Why is coverage 95%?”, “How is APIx calculated?”, or “Explain this page”.',
+          text: 'I’m focused on Airlens navigation and factual explanations. Try “What is the current Airlens?”, “Why is coverage 95%?”, “How is Airlens calculated?”, or “Explain this page”.',
         });
       }
     } catch (error) {
       addMessage({
         role: 'assistant',
-        text: error instanceof Error ? `I couldn't retrieve that live information right now. ${error.message}` : 'I could not retrieve that information from the APIx backend right now.',
+        text: error instanceof Error ? `I couldn't retrieve that live information right now. ${error.message}` : 'I could not retrieve that information from the Airlens backend right now.',
       });
     } finally {
       setBusy(false);
@@ -323,7 +323,7 @@ export default function ApixAssistant() {
     return (
       <button
         type="button"
-        aria-label="Open APIx Assistant"
+        aria-label="Open Airlens Assistant"
         onClick={() => setOpen(true)}
         className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#16202B] text-white shadow-[0_12px_35px_rgba(70,61,69,0.18)] transition hover:-translate-y-0.5 hover:bg-[#223447] focus:outline-none focus:ring-4 focus:ring-[#6B5A78]/20"
       >
@@ -337,9 +337,9 @@ export default function ApixAssistant() {
     return (
       <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-2xl border border-[#CDC5BB] bg-white px-3 py-2 shadow-[0_12px_35px_rgba(70,61,69,0.13)]">
         <button type="button" onClick={() => setMinimized(false)} className="flex items-center gap-2 text-sm font-semibold text-[#30313A]">
-          <Bot size={18} className="text-[#6B5A78]" /> APIx Assistant
+          <Bot size={18} className="text-[#6B5A78]" /> Airlens Assistant
         </button>
-        <button type="button" aria-label="Close APIx Assistant" onClick={() => setOpen(false)} className="rounded-lg p-2 text-[#74727A] hover:bg-[#ECE8E1]">
+        <button type="button" aria-label="Close Airlens Assistant" onClick={() => setOpen(false)} className="rounded-lg p-2 text-[#74727A] hover:bg-[#ECE8E1]">
           <X size={16} />
         </button>
       </div>
@@ -347,25 +347,25 @@ export default function ApixAssistant() {
   }
 
   return (
-    <section aria-label="APIx Assistant" className="fixed bottom-5 right-5 z-50 flex w-[min(390px,calc(100vw-24px))] flex-col overflow-hidden rounded-3xl border border-[#D9E1E7] bg-white shadow-[0_20px_60px_rgba(70,61,69,0.16)]">
+    <section aria-label="Airlens Assistant" className="fixed bottom-5 right-5 z-50 flex w-[min(390px,calc(100vw-24px))] flex-col overflow-hidden rounded-3xl border border-[#D9E1E7] bg-white shadow-[0_20px_60px_rgba(70,61,69,0.16)]">
       <header className="flex items-center justify-between border-b border-[#D9E1E7] bg-[#16202B] px-4 py-3 text-white">
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#38A9E8] text-[#16202B]"><Bot size={19} className="text-[#16202B]" /></div>
           <div className="min-w-0">
-            <div className="text-sm font-semibold text-white">APIx Assistant</div>
+            <div className="text-sm font-semibold text-white">Airlens Assistant</div>
             <div className="truncate text-[10px] text-[#D9E1E7]">Helping with {pageName(location.pathname)}</div>
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <button type="button" aria-label="Minimize APIx Assistant" onClick={() => setMinimized(true)} className="rounded-lg p-2 text-white hover:bg-[#223447] hover:text-white"><Minus size={16} /></button>
-          <button type="button" aria-label="Close APIx Assistant" onClick={() => setOpen(false)} className="rounded-lg p-2 text-white hover:bg-[#223447] hover:text-white"><X size={16} /></button>
+          <button type="button" aria-label="Minimize Airlens Assistant" onClick={() => setMinimized(true)} className="rounded-lg p-2 text-white hover:bg-[#223447] hover:text-white"><Minus size={16} /></button>
+          <button type="button" aria-label="Close Airlens Assistant" onClick={() => setOpen(false)} className="rounded-lg p-2 text-white hover:bg-[#223447] hover:text-white"><X size={16} /></button>
         </div>
       </header>
 
       <div className="max-h-[430px] min-h-[330px] overflow-y-auto bg-[#FFFFFF] px-3 py-4 text-[#17212B]">
         <div className="mb-3 flex items-start gap-2 rounded-2xl border border-[#D9E1E7] bg-[#EEF3F7] p-3">
           <Sparkles size={15} className="mt-0.5 shrink-0 text-[#38A9E8]" />
-          <p className="text-[11px] leading-5 text-[#667685]">Current-number answers come from the APIx backend. Navigation commands open the relevant page.</p>
+          <p className="text-[11px] leading-5 text-[#667685]">Current-number answers come from the Airlens backend. Navigation commands open the relevant page.</p>
         </div>
 
         <div className="space-y-3">
@@ -382,7 +382,7 @@ export default function ApixAssistant() {
             </div>
           ))}
 
-          {busy && <div className="flex justify-start"><div className="rounded-2xl rounded-bl-md border border-[#D9E1E7] bg-[#EEF3F7] px-3 py-2.5 text-xs text-[#667685]">Checking current APIx data…</div></div>}
+          {busy && <div className="flex justify-start"><div className="rounded-2xl rounded-bl-md border border-[#D9E1E7] bg-[#EEF3F7] px-3 py-2.5 text-xs text-[#667685]">Checking current Airlens data…</div></div>}
           <div ref={endRef} />
         </div>
       </div>
@@ -399,7 +399,7 @@ export default function ApixAssistant() {
         <form onSubmit={event => { event.preventDefault(); void ask(input); }} className="flex items-end gap-2">
           <div className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-[#D9E1E7] bg-white px-3 py-2 focus-within:border-[#38A9E8] focus-within:ring-2 focus-within:ring-[#38A9E8]/10">
             <CircleHelp size={15} className="shrink-0 text-[#667685]" />
-            <input value={input} onChange={event => setInput(event.target.value)} placeholder="Ask about APIx…" aria-label="Ask APIx Assistant" className="min-w-0 flex-1 bg-transparent text-xs text-[#17212B] outline-none placeholder:text-[#667685]" />
+            <input value={input} onChange={event => setInput(event.target.value)} placeholder="Ask about Airlens…" aria-label="Ask Airlens Assistant" className="min-w-0 flex-1 bg-transparent text-xs text-[#17212B] outline-none placeholder:text-[#667685]" />
           </div>
           <button type="submit" disabled={!input.trim() || busy} aria-label="Send question" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#16202B] text-white hover:bg-[#223447] disabled:cursor-not-allowed disabled:opacity-40">
             <Send size={15} />

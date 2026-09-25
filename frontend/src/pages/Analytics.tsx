@@ -298,7 +298,7 @@ export default function Analytics() {
       const indexValue = numberFrom(row, [
         'index',
         'index_value',
-        'apix',
+        'airlens',
         'route_index',
       ]);
 
@@ -815,7 +815,7 @@ export default function Analytics() {
                     </div>
 
                     <p className="mt-2 max-w-2xl text-xs leading-5 text-[#667685]">
-                      APIx summarizes movement in observed
+                      Airlens summarizes movement in observed
                       domestic airfare prices relative to the
                       prototype base index of 100. The current
                       national value is built from DGCA-weighted
@@ -830,7 +830,7 @@ export default function Analytics() {
                     </div>
 
                     <p className="mt-2 text-xs text-[#667685]">
-                      National APIx history is not yet available.
+                      National Airlens history is not yet available.
                     </p>
                   </>
                 )}
@@ -925,7 +925,7 @@ export default function Analytics() {
 
                 <p className="mt-1 max-w-2xl text-xs leading-5 text-[#667685]">
                   Each point represents a real daily national
-                  APIx snapshot. The series is intentionally not
+                  Airlens snapshot. The series is intentionally not
                   filled with synthetic history.
                 </p>
               </div>
@@ -943,7 +943,7 @@ export default function Analytics() {
               <div className="mt-5">
                 <TrendChart
                   data={nationalTrend}
-                  title="National APIx"
+                  title="National Airlens"
                   label="INDEX SCORE"
                 />
               </div>
@@ -959,7 +959,7 @@ export default function Analytics() {
                 </div>
 
                 <p className="mx-auto mt-2 max-w-md text-xs leading-5 text-[#667685]">
-                  APIx requires additional real daily
+                  Airlens requires additional real daily
                   observations before a meaningful national trend
                   can be displayed. No artificial periods are
                   inserted.
@@ -981,7 +981,7 @@ export default function Analytics() {
                 </h2>
 
                 <p className="mt-1 max-w-2xl text-xs leading-5 text-[#667685]">
-                  APIx collects fares at multiple booking horizons
+                  Airlens collects fares at multiple booking horizons
                   to observe how airfare changes as the travel date
                   approaches. Only valid observations are included.
                 </p>
@@ -1074,7 +1074,7 @@ export default function Analytics() {
                   Explore the individual routes that make up the
                   national airfare basket. Passenger-volume weights
                   determine each route's contribution to National
-                  APIx.
+                  Airlens.
                 </p>
               </div>
 
@@ -1104,7 +1104,7 @@ export default function Analytics() {
                     </th>
 
                     <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-[#667685]">
-                      Route APIx
+                      Route Airlens
                     </th>
 
                     <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-[#667685]">
@@ -1270,7 +1270,7 @@ export default function Analytics() {
               />
 
               <p className="text-[11px] leading-5 text-[#667685]">
-                Route APIx values describe movement for an
+                Route Airlens values describe movement for an
                 individual route. The national index combines
                 covered routes using their DGCA passenger-volume
                 weights. Routes without sufficient valid data are
@@ -1293,7 +1293,7 @@ export default function Analytics() {
 
                 <p className="route-deep-dive-description mt-1 text-xs leading-5 text-[#667685]">
                   Compare real observed fares for one
-                  representative route across the six APIx booking
+                  representative route across the six Airlens booking
                   horizons.
                 </p>
               </div>
@@ -1325,7 +1325,7 @@ export default function Analytics() {
             <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div className="route-metric-card rounded-xl border border-[#D9E1E7] bg-white p-4">
                 <div className="route-metric-label text-[10px] font-bold uppercase tracking-wide text-[#667685]">
-                  Route APIx
+                  Route Airlens
                 </div>
 
                 <div className="route-metric-value mt-2 text-xl font-semibold text-[#17212B]">
@@ -1442,7 +1442,7 @@ export default function Analytics() {
               </div>
 
               <p className="interpretation-copy mt-3 text-xs leading-6 text-[#667685]">
-                APIx uses 100 as its prototype base index. Values
+                Airlens uses 100 as its prototype base index. Values
                 above 100 indicate observed airfare levels above the
                 reference level, while values below 100 indicate
                 lower observed levels.

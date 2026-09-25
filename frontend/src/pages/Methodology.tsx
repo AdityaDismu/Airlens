@@ -279,7 +279,7 @@ export default function Methodology() {
           TECHNICAL DOCUMENTATION
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-[#17212B] sm:text-4xl">
-          APIx Methodology
+          Airlens Methodology
         </h1>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-[#667685]">
           The implemented statistical path from live airfare observations to route, national and periodic indicators.
@@ -396,7 +396,7 @@ export default function Methodology() {
               />
 
               <Formula
-                title="Route APIx"
+                title="Route Airlens"
                 note="The route index combines the available lead-time-window price relatives using the implemented geometric-mean aggregation. A route is reported only from eligible observed windows."
                 formula={<span>I<sub>route,t</sub> = (∏ R<sub>route,t,w</sub>)<sup>1/k</sup></span>}
               />
@@ -408,9 +408,9 @@ export default function Methodology() {
               />
 
               <Formula
-                title="National APIx"
+                title="National Airlens"
                 note="The national indicator uses a passenger-volume-weighted geometric aggregation of covered route indexes. Weights of covered routes are renormalized when some configured routes are unavailable."
-                formula={<span>APIx<sub>t</sub> = exp(Σ w<sub>r</sub> × ln(I<sub>r,t</sub>))</span>}
+                formula={<span>Airlens<sub>t</sub> = exp(Σ w<sub>r</sub> × ln(I<sub>r,t</sub>))</span>}
               />
 
               <Formula
@@ -465,7 +465,7 @@ export default function Methodology() {
             </div>
           </Card>
 
-          {/* National APIx explanation */}
+          {/* National Airlens explanation */}
           <Card className="national-aggregation-card border-[#D9E1E7] shadow-sm">
             <div className="mb-6 flex items-center gap-2">
               <Weight size={18} className="national-aggregation-icon text-[#1976D2]" />
@@ -513,7 +513,7 @@ export default function Methodology() {
                 Current prototype state
               </div>
               <p className="prototype-state-copy text-sm leading-6 text-[#667685]">
-                The current National APIx is calculated from the configured <strong>40-directional-route basket</strong>. The latest verified build uses <strong>38 covered routes</strong>, representing <strong>95.0% route coverage</strong>, weighted strictly against DGCA 2024–25 passenger-volume data.
+                The current National Airlens is calculated from the configured <strong>40-directional-route basket</strong>. The latest verified build uses <strong>38 covered routes</strong>, representing <strong>95.0% route coverage</strong>, weighted strictly against DGCA 2024–25 passenger-volume data.
               </p>
             </div>
           </Card>
@@ -553,7 +553,7 @@ export default function Methodology() {
                 <div className="rounded-lg border border-[#D9E1E7] bg-[#EEF3F7] p-4 h-full">
                   <h4 className="policy-card-heading mb-2 text-xs font-bold text-[#17212B]">High-frequency augmentation indicator</h4>
                   <p className="policy-copy text-xs leading-5 text-[#667685]">
-                    APIx is explicitly designed as a high-frequency airfare price indicator meant to augment airfare price measurement for real-time economic monitoring. It should not be interpreted as a replacement for the official CPI produced by NSO/MoSPI.
+                    Airlens is explicitly designed as a high-frequency airfare price indicator meant to augment airfare price measurement for real-time economic monitoring. It should not be interpreted as a replacement for the official CPI produced by NSO/MoSPI.
                   </p>
                 </div>
               </div>

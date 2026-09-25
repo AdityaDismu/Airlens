@@ -1,6 +1,6 @@
-# APIx Frontend
+# Airlens Frontend
 
-React + Vite + TypeScript + Tailwind frontend for the APIx Real-Time Airfare Price Index prototype.
+React + Vite + TypeScript + Tailwind frontend for the Airlens Real-Time Airfare Price Index prototype.
 
 ## Backend connection
 
@@ -32,4 +32,4 @@ npm run build
 
 ## Integrity
 
-National APIx is displayed only when the backend has verified route weights and sufficient route coverage. Source fields that are unavailable remain null/unavailable. Flagged observations remain auditable and are not presented as valid index inputs. Missing historical periods are not fabricated.
+National Airlens is displayed only when the backend has verified route weights and sufficient route coverage. Source fields that are unavailable remain null/unavailable. Flagged observations remain auditable and are not presented as valid index inputs. Missing historical periods are not fabricated.

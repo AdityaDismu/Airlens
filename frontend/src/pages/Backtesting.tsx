@@ -131,7 +131,7 @@ export default function Backtesting() {
       <PageHeader
         tag="VALIDATION"
         title="Backtesting"
-        subtitle="Historical validation of APIx calculations against accumulated real observations and reference data."
+        subtitle="Historical validation of Airlens calculations against accumulated real observations and reference data."
       />
 
       {error ? (
@@ -175,7 +175,7 @@ export default function Backtesting() {
 
                 <p className="validation-state-copy mt-2 max-w-3xl text-xs leading-6 text-[#667685]">
                   {insufficientHistory
-                    ? 'The backtest is waiting for enough real daily National APIx history. The backend does not manufacture historical observations to satisfy the 30-day requirement.'
+                    ? 'The backtest is waiting for enough real daily National Airlens history. The backend does not manufacture historical observations to satisfy the 30-day requirement.'
                     : latest
                       ? 'The latest stored backtest result is shown below using the backend calculation and its recorded reference data.'
                       : 'No completed backtest result is currently stored. A valid reference dataset and sufficient accumulated history are required before a result can be reported.'}
@@ -255,7 +255,7 @@ export default function Backtesting() {
 
                       <p className="mt-2 text-xs leading-6 text-[#74727A]">
                         The current system has only a small amount of
-                        accumulated daily National APIx history. A
+                        accumulated daily National Airlens history. A
                         30-day backtest requires enough real historical
                         periods to make the comparison meaningful.
                       </p>

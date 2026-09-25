@@ -195,7 +195,7 @@ export default function Dashboard() {
       <div className="flex min-h-[70vh] items-center justify-center">
         <div className="flex flex-col items-center gap-4 text-slate-500">
           <RefreshCw className="h-8 w-8 animate-spin text-blue-600" />
-          <span className="text-sm font-semibold uppercase tracking-widest">Initializing APIx Core…</span>
+          <span className="text-sm font-semibold uppercase tracking-widest">Initializing Airlens Core…</span>
         </div>
       </div>
     );
@@ -232,7 +232,7 @@ export default function Dashboard() {
             Statistical Airfare Monitor
           </div>
           <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
-            Airfare Price Index (APIx)
+            Airfare Price Index (Airlens)
           </h1>
         </div>
 
@@ -267,7 +267,7 @@ export default function Dashboard() {
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#1976D2]">
-                  <GlobeIcon /> National APIx
+                  <GlobeIcon /> National Airlens
                 </div>
                 <div className="mt-1 text-xs text-[#667685]">Base index = 100.00 • {formatDate(latestNational?.observation_date)}</div>
               </div>
@@ -290,9 +290,9 @@ export default function Dashboard() {
             <div className="mt-4 rounded-2xl border border-[#D7E0E8] bg-[#F4F7FA] p-3.5 text-xs leading-relaxed text-[#667685]">
               <div className="mb-0.5 flex items-center gap-1.5 font-bold text-[#17212B]">
                 <Info className="h-3.5 w-3.5 shrink-0 text-[#1976D2]" />
-                What is APIx?
+                What is Airlens?
               </div>
-              APIx measures how domestic airfare prices are moving relative to the prototype base period of 100. A value above 100 indicates higher observed fare levels relative to the base.
+              Airlens measures how domestic airfare prices are moving relative to the prototype base period of 100. A value above 100 indicates higher observed fare levels relative to the base.
             </div>
           </div>
 
@@ -383,7 +383,7 @@ export default function Dashboard() {
         <div className="dashboard-trend-card rounded-3xl bg-white border border-[#D9E1E7] p-6 shadow-sm">
           <TrendChart 
             data={nationalTrend} 
-            title="National APIx Trend" 
+            title="National Airlens Trend" 
             label="MACRO MOVEMENT" 
             emptyExplanation="National trend requires accumulated daily observations. The system currently has a limited history; a longer real-time history is required before a full 30-day trend is reported."
           />
@@ -410,7 +410,7 @@ export default function Dashboard() {
             <h2 className="text-xl font-bold text-[#17212B]">Average Fare by Advance Purchase (DEL → BOM)</h2>
             
             <div className="mt-2 rounded-xl bg-[#F1F4F6] border border-[#D9E1E7] p-3 text-xs text-[#667685] leading-relaxed mb-6">
-              <span className="font-bold">How does booking time affect observed fares?</span> APIx monitors the same route at multiple advance-purchase windows to capture how airfare changes as the travel date approaches.
+              <span className="font-bold">How does booking time affect observed fares?</span> Airlens monitors the same route at multiple advance-purchase windows to capture how airfare changes as the travel date approaches.
             </div>
 
             <div className="space-y-4">
@@ -437,16 +437,16 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Periodic APIx List */}
+        {/* Periodic Airlens List */}
         <div className="rounded-3xl bg-white border border-[#D9E1E7] p-7 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-[#667685] mb-1">
               <BarChart3 className="h-4 w-4 text-[#1976D2]" /> Time Horizons
             </div>
-            <h2 className="text-xl font-bold text-[#17212B] mb-2">Periodic APIx</h2>
+            <h2 className="text-xl font-bold text-[#17212B] mb-2">Periodic Airlens</h2>
             
             <p className="text-xs text-[#667685] mb-6 leading-relaxed">
-              Periodic APIx summarizes observed airfare movement over different time horizons, allowing daily, weekly and monthly monitoring as real history accumulates.
+              Periodic Airlens summarizes observed airfare movement over different time horizons, allowing daily, weekly and monthly monitoring as real history accumulates.
             </p>
 
             <div className="space-y-3">

@@ -298,7 +298,7 @@ export default function Pipeline() {
             Collection Pipeline
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-[#667685]">
-            How APIx collects and prepares real airfare observations for index calculation.
+            How Airlens collects and prepares real airfare observations for index calculation.
           </p>
         </div>
         <button className="button-secondary shrink-0" onClick={load}>
@@ -308,7 +308,7 @@ export default function Pipeline() {
 
       <div className="pipeline-intro-panel mb-6 rounded-xl border border-[#D9E1E7] bg-white p-5 shadow-sm">
         <p className="pipeline-intro-copy text-sm leading-6 text-[#667685]">
-          APIx automatically collects airfare observations across predefined routes and advance-purchase windows. Each collection passes through validation, cleaning and database storage before eligible observations reach the index engine.
+          Airlens automatically collects airfare observations across predefined routes and advance-purchase windows. Each collection passes through validation, cleaning and database storage before eligible observations reach the index engine.
         </p>
       </div>
 
@@ -349,7 +349,7 @@ export default function Pipeline() {
                 </div>
 
                   <div className="mt-4 text-xs font-bold uppercase tracking-wide text-[#1976D2]">
-                  APIx route basket: 40 directional routes
+                  Airlens route basket: 40 directional routes
                 </div>
 
                 <p className="latest-run-copy mt-3 max-w-sm text-sm leading-6 text-[#667685]">
@@ -403,7 +403,7 @@ export default function Pipeline() {
 
           {/* Data Flow Pipeline */}
           <Card className="data-flow-card mb-6 border-[#D9E1E7] shadow-sm">
-            <div className="section-label">THE APIx DATA FLOW</div>
+            <div className="section-label">THE Airlens DATA FLOW</div>
             <p className="data-flow-copy mt-2 text-xs leading-5 text-[#667685]">
               Each stage transforms or checks the data before it is allowed to contribute to the final index.
             </p>
@@ -415,11 +415,11 @@ export default function Pipeline() {
                 ['Cleaning', Search],
                 ['Database', Database],
                 ['Index Engine', Layers],
-                ['APIx', CheckCircle2],
+                ['Airlens', CheckCircle2],
               ].map(([name, Icon], i, arr) => (
                 <React.Fragment key={name as string}>
-                  <div className={`data-flow-step relative min-w-0 w-full flex-1 rounded-xl border p-4 text-center shadow-sm transition-shadow hover:shadow-md lg:w-auto ${name === 'APIx' ? 'data-flow-step-success' : ''}`}>
-                    <div className={`data-flow-step-icon mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full ${name === 'APIx' ? 'data-flow-step-success-icon' : ''}`}>
+                  <div className={`data-flow-step relative min-w-0 w-full flex-1 rounded-xl border p-4 text-center shadow-sm transition-shadow hover:shadow-md lg:w-auto ${name === 'Airlens' ? 'data-flow-step-success' : ''}`}>
+                    <div className={`data-flow-step-icon mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full ${name === 'Airlens' ? 'data-flow-step-success-icon' : ''}`}>
                       {React.createElement(Icon as React.ComponentType<{ size: number }>, { size: 18 })}
                     </div>
                     <div className="data-flow-step-label text-[11px] font-bold uppercase tracking-wide">
@@ -445,7 +445,7 @@ export default function Pipeline() {
           <Card className="lead-time-section mb-6 border-[#D9E1E7] shadow-sm">
             <div className="section-label">SYNCHRONIZED LEAD-TIME WINDOWS</div>
             <p className="lead-time-description mt-2 text-xs leading-5 text-[#667685]">
-              APIx observes the same route at multiple advance-purchase points to capture how airfare changes as the travel date approaches.
+              Airlens observes the same route at multiple advance-purchase points to capture how airfare changes as the travel date approaches.
             </p>
 
             <div className="mt-6 grid grid-cols-2 lg:grid-cols-6 gap-4">
@@ -584,7 +584,7 @@ export default function Pipeline() {
               </div>
             </div>
             <p className="transparency-copy mt-2 text-xs leading-6 text-[#667685]">
-              APIx records the collection run and individual observations separately, allowing every published index value to be traced back to its underlying collection data.
+              Airlens records the collection run and individual observations separately, allowing every published index value to be traced back to its underlying collection data.
             </p>
           </Card>
         </>

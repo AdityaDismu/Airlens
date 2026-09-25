@@ -76,7 +76,7 @@ export default function LandingPage() {
 
             <div>
               <div className="text-lg font-bold tracking-tight text-white drop-shadow-sm">
-                APIx
+                Airlens
               </div>
               <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-300">
                 Airfare Price Index
@@ -220,7 +220,7 @@ export default function LandingPage() {
 
             <div className="max-w-2xl">
               <p className="text-lg leading-8 text-[#667085]">
-                APIx is designed as a real-time statistical monitoring system
+                Airlens is designed as a real-time statistical monitoring system
                 for domestic airfare. It collects observable airfare data,
                 validates and standardizes the observations, and converts
                 them into comparable price movements.
@@ -311,7 +311,7 @@ export default function LandingPage() {
                   ["02", "Validation", "Schema & constraints"],
                   ["03", "Cleaning", "Deduplication & outliers"],
                   ["04", "Index Engine", "Jevons calculation"],
-                  ["05", "APIx", "Statistical indicator"],
+                  ["05", "Airlens", "Statistical indicator"],
                 ].map(([num, title, text]) => (
                   <div
                     key={num}
@@ -351,7 +351,7 @@ export default function LandingPage() {
           </h2>
 
           <p className="mx-auto mt-6 max-w-2xl leading-7 text-[#B8C0CF]">
-            APIx is designed to augment airfare price measurement by providing
+            Airlens is designed to augment airfare price measurement by providing
             more frequent observations of market airfare movements. It is a
             prototype indicator and does not replace the official Consumer
             Price Index.
@@ -370,12 +370,12 @@ export default function LandingPage() {
               <Plane className="h-4 w-4 -rotate-6" />
             </div>
             <span className="text-sm font-semibold text-[#172033]">
-              APIx — Airfare Price Index
+              Airlens — Airfare Price Index
             </span>
           </div>
 
           <p className="text-xs">
-            © {new Date().getFullYear()} APIx Prototype. Designed for statistical analysis.
+            © {new Date().getFullYear()} Airlens Prototype. Designed for statistical analysis.
           </p>
         </div>
       </footer>
